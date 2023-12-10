@@ -29,6 +29,28 @@ void pointer_input()
     pointer.click = pointer.down && !pointer.down_previously;
 }
 
+void draw1(SDL_Renderer *renderer, float pulse, SDL_Texture *texture1, bool shown)
+{
+    // draw: red pulsating rectangle
+    SDL_SetRenderDrawColor(renderer, 255 * pulse, 0, 0, SDL_ALPHA_OPAQUE); // red, pulsating
+    SDL_Rect rectangle = {.x = 50, .y = 100, .w = 500, .h = 200};          // position and size of a rectangle
+    SDL_RenderFillRect(renderer, &rectangle);                              // fill rectangle with color
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);     // white
+
+    // draw: texture image with pulsating transparence (alpha transparence)
+    SDL_SetTextureAlphaMod(texture1, SDL_ALPHA_OPAQUE * (1 - pulse)); // alpha transparence, pulsating in opposition
+    SDL_RenderCopy(renderer, texture1, NULL, NULL);                   // draw in full size of render target
+    SDL_SetTextureAlphaMod(texture1, SDL_ALPHA_OPAQUE);               // not transparent at all, opaque
+
+    // draw: pointer-like image. click shows and hides it.
+    int size = 100; // reduced size of texture1 (originally 3000*2943 of assets/rose.png)
+    // attach to pointer (centering) and scale down to the size
+    SDL_Rect rectangle2 = {.x = pointer.x - size / 2, .y = pointer.y - size / 2, .w = size, .h = size};
+    if (shown)
+        SDL_RenderCopy(renderer, texture1, NULL, &rectangle2); // draw in rectangle2, if shown
+    SDL_ShowCursor(!shown);                                    // show default cursor image or custum cursor image
+}
+
 // app entry-point "main()": execution of program begins here and terminates here
 int main(int argc, char **argv)
 {
@@ -84,24 +106,7 @@ int main(int argc, char **argv)
 
         // == DRAW ==
 
-        // draw: red pulsating rectangle
-        SDL_SetRenderDrawColor(renderer, 255 * pulse, 0, 0, SDL_ALPHA_OPAQUE); // red, pulsating
-        SDL_Rect rectangle = {.x = 50, .y = 100, .w = 500, .h = 200};          // position and size of a rectangle
-        SDL_RenderFillRect(renderer, &rectangle);                              // fill rectangle with color
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);     // white
-
-        // draw: texture image with pulsating transparence (alpha transparence)
-        SDL_SetTextureAlphaMod(texture1, SDL_ALPHA_OPAQUE * (1 - pulse)); // alpha transparence, pulsating in opposition
-        SDL_RenderCopy(renderer, texture1, NULL, NULL);                   // draw in full size of render target
-        SDL_SetTextureAlphaMod(texture1, SDL_ALPHA_OPAQUE);               // not transparent at all, opaque
-
-        // draw: pointer-like image. click shows and hides it.
-        int size = 100; // reduced size of texture1 (originally 3000*2943 of assets/rose.png)
-        // attach to pointer (centering) and scale down to the size
-        SDL_Rect rectangle2 = {.x = pointer.x - size / 2, .y = pointer.y - size / 2, .w = size, .h = size};
-        if (shown)
-            SDL_RenderCopy(renderer, texture1, NULL, &rectangle2); // draw in rectangle2, if shown
-        SDL_ShowCursor(!shown);                                    // show default cursor image or custum cursor image
+        draw1(renderer, pulse, texture1, shown);
 
         // end draw
         SDL_RenderPresent(renderer);
