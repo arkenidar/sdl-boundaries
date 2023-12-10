@@ -1,5 +1,6 @@
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 #include <stdbool.h>
 #include <math.h>
 #define math_pi (3.14159265358979323846264338327950288419716939937510)
@@ -18,6 +19,9 @@ int main(int argc, char **argv)
     SDL_Renderer *renderer;
     SDL_CreateWindowAndRenderer(640, 480, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE, &window, &renderer);
     SDL_SetWindowTitle(window, "[libsdl.org] SDL window: <title here> (note: this window is resizable)");
+    IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG);
+    SDL_Texture *texture1 = IMG_LoadTexture(renderer, "assets/rose.png");
+    logger(texture1 ? "texture loaded!" : "texture not loaded!");
 
     // run loop
     bool running = true;
@@ -50,12 +54,18 @@ int main(int argc, char **argv)
         SDL_SetRenderDrawColor(renderer, 255 * pulse, 0, 0, SDL_ALPHA_OPAQUE);
         SDL_RenderFillRect(renderer, &rectangle);
 
+        SDL_RenderCopy(renderer, texture1, NULL, NULL);
+        SDL_Rect rectangle2 = {.x = 10, .y = 15, .w = 300, .h = 300};
+        SDL_RenderCopy(renderer, texture1, NULL, &rectangle2);
+
         // end draw
         SDL_RenderPresent(renderer);
     }
 
     // end
     logger("this app is terminating...");
+    SDL_DestroyTexture(texture1);
+    IMG_Quit();
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();

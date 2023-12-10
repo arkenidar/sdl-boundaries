@@ -12,5 +12,8 @@ add_executable(app ${SOURCE_FILES})
 find_package( SDL2 REQUIRED )
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 
+find_package(SDL2_image REQUIRED)
+target_link_libraries(${PROJECT_NAME} SDL2_image::SDL2_image)
+
 # link with libm (math library), needed e.g. in GNU/Linux setting
 target_link_libraries(${PROJECT_NAME} m)
