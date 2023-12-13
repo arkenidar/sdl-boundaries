@@ -11,7 +11,7 @@ SDL_Renderer *renderer; // global
 enum enum_textures {
     cursor,
     rose,
-    enum_textures_count
+    enum_textures_count // alway last, to keep count ("enum" keyword kind of counts)
 };
 SDL_Texture *textures[enum_textures_count]; // global
 
@@ -112,7 +112,7 @@ int main(__attribute__((unused)) int argc, __attribute__((unused)) char **argv) 
     textures[cursor] = IMG_LoadTexture(renderer, "assets/cursor.png");
     textures[rose] = IMG_LoadTexture(renderer, "assets/rose.png");
     bool textures_loaded = true;
-    for (int i = 0; i < sizeof textures / sizeof(SDL_Texture *); i++) {
+    for (int i = 0; i < enum_textures_count; i++) {
         if (textures[i] == NULL) {
             textures_loaded = false;
             break;
@@ -172,7 +172,7 @@ int main(__attribute__((unused)) int argc, __attribute__((unused)) char **argv) 
 
     // end program
     logger("this app is terminating...");
-    for (int i = 0; i < sizeof textures / sizeof(SDL_Texture *); i++)
+    for (int i = 0; i < enum_textures_count; i++)
         SDL_DestroyTexture(textures[i]);
     IMG_Quit();
     SDL_DestroyRenderer(renderer);
