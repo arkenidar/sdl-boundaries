@@ -157,13 +157,13 @@ int main(__attribute__((unused)) int argc, __attribute__((unused)) char **argv) 
 
         // == DRAW ==
 
-        draw_pulsating();
+        ///draw_pulsating();
 
         // add check-boxes (visual+behaviour)
         for (int i = 0; i < sizeof checkbox_is_checked / sizeof(bool); i++)
             draw_checkbox(10, 10 + 70 * i, 50, 30, checkbox_is_checked + i);
 
-        draw_pointer(shown);
+        ///draw_pointer(shown);
 
         // end draw
         SDL_RenderPresent(renderer);
