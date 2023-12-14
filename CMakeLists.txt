@@ -15,5 +15,8 @@ target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 find_package(SDL2_image REQUIRED)
 target_link_libraries(${PROJECT_NAME} SDL2_image::SDL2_image)
 
+find_package(SDL2_ttf REQUIRED)
+target_link_libraries(${PROJECT_NAME} SDL2_ttf::SDL2_ttf)
+
 # link with libm (math library), needed e.g. in GNU/Linux setting
 target_link_libraries(${PROJECT_NAME} m)
