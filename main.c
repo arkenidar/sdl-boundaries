@@ -153,13 +153,14 @@ int draw_checkbox(int x, int y, int size1, int size2,
 
     SDL_Color color_foreground = {.r = 0, .g = 0, .b = 0, .a = SDL_ALPHA_OPAQUE}; // black
 
-    SDL_Color color_background_red = {.r = 255, .g = 0, .b = 0, .a = SDL_ALPHA_TRANSPARENT};       // red transparent
-    SDL_Color color_background_white = {.r = 255, .g = 255, .b = 255, .a = SDL_ALPHA_TRANSPARENT}; // white transparent
+    /// SDL_Color color_background_red = {.r = 255, .g = 0, .b = 0, .a = SDL_ALPHA_TRANSPARENT};       // red transparent
+    /// SDL_Color color_background_white = {.r = 255, .g = 255, .b = 255, .a = SDL_ALPHA_TRANSPARENT}; // white transparent
 
     text = *checkbox_is_checked_state ? text_checked_yes : text_checked_no;
     /// TTF_SizeUTF8(font, text, &rectangle_checkbox_label.w, &rectangle_checkbox_label.h);
-    // TTF_RenderUTF8_Blended_Wrapped works fine
-    SDL_Surface *surface_text = TTF_RenderUTF8_LCD_Wrapped(font, text, color_foreground, is_inside_checkbox ? color_background_red : color_background_white, 0);
+    // TTF_RenderUTF8_Blended_Wrapped (no background) works fine. or: TTF_RenderUTF8_LCD_Wrapped (with bg/background)
+    SDL_Surface *surface_text = TTF_RenderUTF8_Blended_Wrapped(font, text, color_foreground,
+                                                               /*/ is_inside_checkbox ? color_background_red : color_background_white, */ 0);
     // size
     rectangle_checkbox_label.w = surface_text->w;
     rectangle_checkbox_label.h = surface_text->h;
