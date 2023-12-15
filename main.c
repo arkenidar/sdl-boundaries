@@ -91,6 +91,8 @@ int draw_checkbox(int x, int y, int size1, int size2,
                   bool *checkbox_is_checked_state,
                   char *check_box_labels_string)
 {
+    bool optional_old_checkbox = false;
+
     TTF_SetFontSize(font, size1);
 
     int size_extern = size1;
@@ -117,19 +119,21 @@ int draw_checkbox(int x, int y, int size1, int size2,
     SDL_FreeSurface(surface_text_sizing);
 
     SDL_Rect rectangle_checkbox_label = {.x = x, .y = y, .w = w, .h = h};
-    rectangle_checkbox_label.x += size_extern + 10;
+    if (optional_old_checkbox) // leave space or not
+        rectangle_checkbox_label.x += size_extern + 10;
 
     bool is_inside_checkbox = false;
 
-    is_inside_checkbox =
-        is_inside_checkbox || is_point_in_rectangle(&rectangle_checkbox_background, pointer.x, pointer.y);
+    if (optional_old_checkbox) // clickable or not
+        is_inside_checkbox =
+            is_inside_checkbox || is_point_in_rectangle(&rectangle_checkbox_background, pointer.x, pointer.y);
 
     is_inside_checkbox = is_inside_checkbox || is_point_in_rectangle(&rectangle_checkbox_label, pointer.x, pointer.y);
 
     if (pointer.click && is_inside_checkbox)
         *checkbox_is_checked_state = !*checkbox_is_checked_state;
 
-    if (true)
+    if (optional_old_checkbox) // draw or not
     {
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE); // black
         SDL_RenderFillRect(renderer, &rectangle_checkbox_background);
