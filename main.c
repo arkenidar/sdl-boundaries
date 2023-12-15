@@ -51,7 +51,7 @@ void pointer_input()
     pointer.click = pointer.down && !pointer.down_previously;
 }
 
-void draw_pulsating()
+void draw_pulsating(bool no_pulse)
 {
 
     Uint64 ticks = SDL_GetTicks64();                            // elapsed time
@@ -60,19 +60,19 @@ void draw_pulsating()
     // draw: red pulsating rectangle
     if (true)
     {
-        SDL_SetRenderDrawColor(renderer, (Uint8)(255 * pulse), 0, 0, SDL_ALPHA_OPAQUE); // red, pulsating
-        SDL_Rect rectangle = {.x = 50, .y = 100, .w = 500, .h = 200};                   // position and size of a rectangle
-        SDL_RenderFillRect(renderer, &rectangle);                                       // fill rectangle with color
-        SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);              // white
+        SDL_SetRenderDrawColor(renderer, (Uint8)(no_pulse ? 255 : 255 * pulse), 0, 0, SDL_ALPHA_OPAQUE); // red, pulsating
+        SDL_Rect rectangle = {.x = 50, .y = 100, .w = 500, .h = 200};                                    // position and size of a rectangle
+        SDL_RenderFillRect(renderer, &rectangle);                                                        // fill rectangle with color
+        SDL_SetRenderDrawColor(renderer, 255, 255, 255, SDL_ALPHA_OPAQUE);                               // white
     }
 
     // draw: texture image with pulsating transparence (alpha transparence)
     if (true)
     {
         SDL_SetTextureAlphaMod(textures[rose],
-                               SDL_ALPHA_OPAQUE * (1 - pulse));   // alpha transparence, pulsating in opposition
-        SDL_RenderCopy(renderer, textures[rose], NULL, NULL);     // draw in full size of render target
-        SDL_SetTextureAlphaMod(textures[rose], SDL_ALPHA_OPAQUE); // not transparent at all, opaque
+                               no_pulse ? SDL_ALPHA_OPAQUE : (SDL_ALPHA_OPAQUE * (1 - pulse))); // alpha transparence, pulsating in opposition
+        SDL_RenderCopy(renderer, textures[rose], NULL, NULL);                                   // draw in full size of render target
+        SDL_SetTextureAlphaMod(textures[rose], SDL_ALPHA_OPAQUE);                               // not transparent at all, opaque
     }
 }
 
@@ -155,7 +155,7 @@ int draw_checkbox(int x, int y, int size1, int size2,
 
     // add text
 
-    SDL_Color color_foreground = {.r = 0, .g = 0, .b = 0, .a = SDL_ALPHA_OPAQUE}; // black
+    SDL_Color color_foreground = {.r = 255, .g = 255, .b = 255, .a = SDL_ALPHA_OPAQUE}; // white now, was: black
 
     /// SDL_Color color_background_red = {.r = 255, .g = 0, .b = 0, .a = SDL_ALPHA_TRANSPARENT};       // red transparent
     /// SDL_Color color_background_white = {.r = 255, .g = 255, .b = 255, .a = SDL_ALPHA_TRANSPARENT}; // white transparent
@@ -215,7 +215,7 @@ int main(__attribute__((unused)) int argc, __attribute__((unused)) char **argv)
     pointer_init();
 
     // states (with initializations)
-    /// bool shown = true;
+    bool shown = true && textures_loaded;
 
     // states of check-boxes
     bool checkbox_is_checked[4] = {true, false, true, true};
@@ -252,22 +252,25 @@ int main(__attribute__((unused)) int argc, __attribute__((unused)) char **argv)
 
         // == DRAW ==
 
-        /// draw_pulsating();
+        draw_pulsating(true /* no pulse? */);
 
-        // add check-boxes (visual+behaviour)
-
-        char *check_box_labels_strings[sizeof checkbox_is_checked / sizeof(bool)] = {
-            "option 1", "option 2 ...", "another option in \n 3 lines \n !!!!", "last option"};
-
-        int y = 10;
-        int height;
-        for (int i = 0; i < sizeof checkbox_is_checked / sizeof(bool); i++)
+        if (font)
         {
-            height = draw_checkbox(10, y, 50, 30, checkbox_is_checked + i, check_box_labels_strings[i]);
-            y += height + 10;
+            // add check-boxes (visual+behaviour)
+
+            char *check_box_labels_strings[sizeof checkbox_is_checked / sizeof(bool)] = {
+                "option 1", "option 2 ...", "another option in \n 3 lines \n !!!!", "last option"};
+
+            int y = 10;
+            int height;
+            for (int i = 0; i < sizeof checkbox_is_checked / sizeof(bool); i++)
+            {
+                height = draw_checkbox(10, y, 50, 30, checkbox_is_checked + i, check_box_labels_strings[i]);
+                y += height + 10;
+            }
         }
 
-        /// draw_pointer(shown);
+        draw_pointer(shown);
 
         // end draw
         SDL_RenderPresent(renderer);
