@@ -145,7 +145,7 @@ int draw_checkbox(int x, int y, int size1, int size2,
     text = *checkbox_is_checked_state ? text_checked_yes : text_checked_no;
     ///TTF_SizeUTF8(font, text, &rectangle_checkbox_label.w, &rectangle_checkbox_label.h);
     // TTF_RenderUTF8_Blended_Wrapped works fine
-    SDL_Surface *surface_text = TTF_RenderUTF8_LCD_Wrapped(font, text, color_foreground, color_background_red, 0);
+    SDL_Surface *surface_text = TTF_RenderUTF8_LCD_Wrapped(font, text, color_foreground, is_inside_checkbox?color_background_red:color_background_white, 0);
     // size
     rectangle_checkbox_label.w = surface_text->w;
     rectangle_checkbox_label.h = surface_text->h;
