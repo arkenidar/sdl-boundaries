@@ -178,6 +178,26 @@ int draw_checkbox(int x, int y, int size1, int size2,
     return rectangle_checkbox_label.h;
 }
 
+void draw_checkboxes(bool *checkbox_is_checked, int checkboxes_count)
+{
+    if (font)
+    {
+        // add check-boxes (visual+behaviour)
+
+        char *check_box_labels_strings[] = {
+            "option 1", "option 2 ...", "another option in \n 3 lines \n !!!!", "last option"};
+
+        SDL_assert(checkboxes_count == (sizeof check_box_labels_strings / sizeof(char *)));
+        int y = 10;
+        int height;
+        for (int i = 0; i < checkboxes_count; i++)
+        {
+            height = draw_checkbox(10, y, 50, 30, checkbox_is_checked + i, check_box_labels_strings[i]);
+            y += height + 10;
+        }
+    }
+}
+
 // app entry-point "main()": execution of program begins here and terminates here
 int main(__attribute__((unused)) int argc, __attribute__((unused)) char **argv)
 {
@@ -254,23 +274,9 @@ int main(__attribute__((unused)) int argc, __attribute__((unused)) char **argv)
 
         draw_pulsating(true /* no pulse? */);
 
-        if (font)
-        {
-            // add check-boxes (visual+behaviour)
+        draw_checkboxes(/* array */ checkbox_is_checked, /* array size */ sizeof checkbox_is_checked / sizeof(bool));
 
-            char *check_box_labels_strings[sizeof checkbox_is_checked / sizeof(bool)] = {
-                "option 1", "option 2 ...", "another option in \n 3 lines \n !!!!", "last option"};
-
-            int y = 10;
-            int height;
-            for (int i = 0; i < sizeof checkbox_is_checked / sizeof(bool); i++)
-            {
-                height = draw_checkbox(10, y, 50, 30, checkbox_is_checked + i, check_box_labels_strings[i]);
-                y += height + 10;
-            }
-        }
-
-        draw_pointer(shown);
+        // draw_pointer(shown);
 
         // end draw
         SDL_RenderPresent(renderer);
